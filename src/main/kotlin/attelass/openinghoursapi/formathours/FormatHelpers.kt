@@ -34,8 +34,8 @@ private fun getWeeklyRanges(weeklyOpeningData: WeeklyOpeningData): List<Range> {
     val closeEvents = datedEvents.filterIsInstance<DatedEvent.CloseEvent>()
 
     return openingEvents.map { event ->
-        val closeEvent = closeEvents
-            .firstOrNull { it.weekday > event.weekday || (it.weekday == event.weekday && it.time > event.time) }
+        val closeEvent = closeEvents.firstOrNull { it.weekday == event.weekday && it.time > event.time }
+            ?: closeEvents.firstOrNull { it.weekday > event.weekday }
             ?: closeEvents.first() // In case we couldn't find any close event after this opening, start looking from the start of the week.
         Range(event.weekday, event.time, closeEvent.time)
     }
